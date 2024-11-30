@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cs-event-service
+server:
+  port: 4420
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:4400/eureka
