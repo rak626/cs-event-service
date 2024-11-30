@@ -1,13 +1,13 @@
-package com.crowdseats.cs_event_service;
+package com.crowdseats.event_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CsEventServiceApplication {
+public class EventServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CsEventServiceApplication.class, args);
+		SpringApplication.run(EventServiceApplication.class, args);
 	}
 
 }
