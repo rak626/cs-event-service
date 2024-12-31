@@ -1,13 +1,29 @@
 spring:
+  config:
+    activate:
+      on-profile: dev,prod
+    import: "optional:configserver:"
+  cloud:
+    config:
+      discovery:
+        serviceId: config-service
+      name: redis-config,event-service
   application:
-    name: cs-event-service
+    name: event-service
 server:
-  port: 4420
+  port: 4430
+
 eureka:
   instance:
     prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 60
   client:
-    fetch-registry: true
-    register-with-eureka: true
     service-url:
       defaultZone: http://localhost:4400/eureka
+
+management:
+  endpoints:
+    web.exposure.include: "*"
+  endpoint:
+    health.show-details: ALWAYS
