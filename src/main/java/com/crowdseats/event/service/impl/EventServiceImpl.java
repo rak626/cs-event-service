@@ -3,6 +3,9 @@ package com.crowdseats.event.service.impl;
 import com.crowdseats.event.entities.Event;
 import com.crowdseats.event.repositories.EventRepository;
 import com.crowdseats.event.service.EventService;
+import com.crowdseats.framework.common.Response;
+import com.crowdseats.framework.common.feign.clients.PricingServiceClient;
+import com.crowdseats.framework.common.feign.clients.ShowTimeServiceClient;
 import com.crowdseats.framework.common.schema.event.Category;
 import com.crowdseats.framework.common.schema.event.EventObject;
 import com.crowdseats.framework.common.schema.event.EventRequest;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final ShowTimeServiceClient showtimeServiceClient;
+    private final PricingServiceClient pricingServiceClient;
 
     @Override
     public EventRequest createEvent(EventRequest eventRequest) {
@@ -23,6 +28,24 @@ public class EventServiceImpl implements EventService {
         EventObject eventObject = mapEventToEventObject(savedEvent);
         eventRequest.setEvent(eventObject);
         return eventRequest;
+    }
+
+    /* todo: this method is not used anywhere
+     *  will be implemented in the next phase
+     */
+    @Override
+    public EventRequest processEvent(EventRequest eventRequest) {
+        EventRequest eventRes;
+        eventRes = createEvent(eventRequest);
+        Response<?> showTime = showtimeServiceClient.createShowTime(eventRes);
+        if (showTime != null && Response.Status.SUCCESS == showTime.getStatus()) {
+            eventRes = (EventRequest) showTime.getResult();
+        }
+        Response<?> pricing = pricingServiceClient.createPricing(eventRes);
+        if (pricing != null && Response.Status.SUCCESS == pricing.getStatus()) {
+            eventRes = (EventRequest) pricing.getResult();
+        }
+        return eventRes;
     }
 
     private EventObject mapEventToEventObject(Event savedEvent) {

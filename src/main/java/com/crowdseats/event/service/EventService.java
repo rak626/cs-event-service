@@ -4,4 +4,6 @@ import com.crowdseats.framework.common.schema.event.EventRequest;
 
 public interface EventService {
     EventRequest createEvent(EventRequest eventRequest);
+
+    EventRequest processEvent(EventRequest eventRequest);
 }
